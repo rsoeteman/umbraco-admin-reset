@@ -8,7 +8,7 @@ using Umbraco.Web;
 namespace UmbracoAdminReset
 {
     /// <summary>
-    /// Simpla class to reset the admin user to username Admin and password Admin1234!
+    /// Simple class to reset the admin user to username Admin and password Admin1234!
     /// </summary>
     public class ResetAdmin :ApplicationEventHandler
     {
