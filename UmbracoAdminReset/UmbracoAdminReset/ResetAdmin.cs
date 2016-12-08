@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Reflection;
+using System.Web.Configuration;
 using Umbraco.Core;
 using Umbraco.Core.IO;
 using Umbraco.Core.Logging;
@@ -8,7 +10,7 @@ using Umbraco.Web;
 namespace UmbracoAdminReset
 {
     /// <summary>
-    /// Simple class to reset the admin user to username Admin and password Admin1234!
+    /// Simple class to reset the admin user to username Admin and to a configured or default password.
     /// </summary>
     public class ResetAdmin :ApplicationEventHandler
     {
@@ -26,17 +28,51 @@ namespace UmbracoAdminReset
                     //Save changes
                     UmbracoContext.Current.Application.Services.UserService.Save(user);
                     //Change password
-                    UmbracoContext.Current.Application.Services.UserService.SavePassword(user, "Admin1234!");
+                    UmbracoContext.Current.Application.Services.UserService.SavePassword(user, GetNewPassword());
                 }
 
                 //Delete this dll
-                var fileName = IOHelper.MapPath("~/bin/UmbracoAdminReset.dll");
+                var fileName = GetAssemblyPath();
                 File.Delete(fileName);
             }
             catch (Exception ex)
             {
                 LogHelper.Error<ResetAdmin>("Error during password reset", ex);
             }
+        }
+
+        /// <summary>
+        /// Gets the new password, which will either come from the web.config, or it will
+        /// be the default password.
+        /// </summary>
+        /// <returns>
+        /// The new password.
+        /// </returns>
+        private string GetNewPassword()
+        {
+            var defaultPassword = "Admin1234!";
+            // For example, your web.config could contain this app setting:
+            //   <add key="UmbracoAdminResetPassword" value="Admin1234!" />
+            var customPassword = WebConfigurationManager.AppSettings["UmbracoAdminResetPassword"];
+            var newPassword = string.IsNullOrWhiteSpace(customPassword)
+                ? defaultPassword
+                : customPassword;
+            return newPassword;
+        }
+
+        /// <summary>
+        /// Gets the full path to the current DLL.
+        /// </summary>
+        /// <returns>
+        /// The full path (e.g., "c:\my-site\bin\UmbracoAdminReset.dll").
+        /// </returns>
+        /// <remarks>
+        /// This code is derived from this answer: http://stackoverflow.com/a/52956/2052963
+        /// </remarks>
+        private string GetAssemblyPath()
+        {
+            var path = Assembly.GetAssembly(typeof(ResetAdmin)).Location;
+            return path;
         }
     }
 }
