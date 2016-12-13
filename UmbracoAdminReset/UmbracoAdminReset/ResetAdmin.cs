@@ -32,7 +32,7 @@ namespace UmbracoAdminReset
                 }
 
                 //Delete this dll
-                var fileName = GetAssemblyPath();
+                var fileName = IOHelper.MapPath("~/bin/UmbracoAdminReset.dll");
                 File.Delete(fileName);
             }
             catch (Exception ex)
@@ -58,21 +58,6 @@ namespace UmbracoAdminReset
                 ? defaultPassword
                 : customPassword;
             return newPassword;
-        }
-
-        /// <summary>
-        /// Gets the full path to the current DLL.
-        /// </summary>
-        /// <returns>
-        /// The full path (e.g., "c:\my-site\bin\UmbracoAdminReset.dll").
-        /// </returns>
-        /// <remarks>
-        /// This code is derived from this answer: http://stackoverflow.com/a/52956/2052963
-        /// </remarks>
-        private string GetAssemblyPath()
-        {
-            var path = Assembly.GetAssembly(typeof(ResetAdmin)).Location;
-            return path;
         }
     }
 }
