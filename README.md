@@ -4,7 +4,7 @@ Simple project that allows reset of the admin user(user 0) username and password
 The username will be reset to **Admin** and password to **Admin1234!**
 
 During the startup of the site UmbracoAdminReset will reset the username and password, will make sure the admin user is unlocked and will delete itself afterwards so you can login and change the credentials yourself.
-=======
+
 If you are concerned about security, you can specify a custom password in the app settings of your web.config before you add the DLL. For example:
 
 ```
