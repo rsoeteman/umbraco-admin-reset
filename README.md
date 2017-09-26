@@ -11,4 +11,4 @@ If you are concerned about security, you can specify a custom password in the ap
 <add key="UmbracoAdminResetPassword" value="MyCustomPassword1234!" />
 ```
 
-The DLL will reset the username and password, will make sure the admin user is unlocked and will delete itself afterwards so you can login and change the credentials yourself.
+The DLL will make sure the Membership provider is allow to change passwords and reset the username and password. The DLL will make sure the admin user is unlocked and will delete itself afterwards so you can login and change the credentials yourself.
