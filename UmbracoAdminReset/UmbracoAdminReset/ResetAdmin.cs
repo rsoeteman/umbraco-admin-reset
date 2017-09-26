@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Reflection;
+using System.Web;
 using System.Web.Configuration;
+using System.Web.Security;
+using System.Xml;
 using Umbraco.Core;
 using Umbraco.Core.IO;
 using Umbraco.Core.Logging;
@@ -21,12 +25,16 @@ namespace UmbracoAdminReset
                 var user = UmbracoContext.Current.Application.Services.UserService.GetUserById(0);
                 if (user != null)
                 {
+                    //Make sure the provider supports change password
+                    ForceAllowChangePassword();
+
                     user.Username = "Admin";
                     user.IsApproved = true;
                     user.IsLockedOut = false;
 
                     //Save changes
                     UmbracoContext.Current.Application.Services.UserService.Save(user);
+                
                     //Change password
                     UmbracoContext.Current.Application.Services.UserService.SavePassword(user, GetNewPassword());
                 }
@@ -38,6 +46,42 @@ namespace UmbracoAdminReset
             catch (Exception ex)
             {
                 LogHelper.Error<ResetAdmin>("Error during password reset", ex);
+            }
+        }
+
+        private void ForceAllowChangePassword()
+        {
+            try
+            {
+                //Create a new xml document
+                XmlDocument document = new XmlDocument();
+
+                //Keep current indentions format
+                document.PreserveWhitespace = true;
+
+                //Load the web.config file into the xml document
+                var webconfigFile = HttpContext.Current.Server.MapPath("~/web.config");
+                document.Load(webconfigFile);
+                var userMembershipNode =
+                    document.SelectSingleNode(
+                        "//configuration/system.web/membership/providers/add[@name='UsersMembershipProvider']");
+                if (userMembershipNode == null) return;
+                var att = userMembershipNode.Attributes["allowManuallyChangingPassword"];
+                if (att == null)
+                {
+                    att = document.CreateAttribute("allowManuallyChangingPassword");
+                    userMembershipNode.Attributes.Append(att);
+                }
+                if (!att.Value.Equals("true"))
+                {
+                    att.Value = "true";
+                }
+
+                document.Save(webconfigFile);
+            }
+            catch (Exception ex)
+            {
+                LogHelper.Error<ResetAdmin>("Error during allowManuallyChangingPassword",ex);
             }
         }
 
