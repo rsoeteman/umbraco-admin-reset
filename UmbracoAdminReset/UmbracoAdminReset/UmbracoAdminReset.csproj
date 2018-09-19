@@ -288,8 +288,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ResetAdmin.cs" />
+    <Compile Include="Controllers\UserActionsController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TypeExtensions\StringExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
