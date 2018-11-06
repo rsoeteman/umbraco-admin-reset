@@ -18,3 +18,5 @@ Cached/
 /UmbracoAdminReset/UmbracoAdminReset/obj
 /UmbracoAdminReset/UmbracoAdminReset/bin
 /UmbracoAdminReset/packages
+/UmbracoAdminReset/UmbracoAdminReset/App_Data/NuGetBackup
+/UmbracoAdminReset/.vs
