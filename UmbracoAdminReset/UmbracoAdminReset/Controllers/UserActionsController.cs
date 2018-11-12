@@ -5,8 +5,7 @@ using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
 using System.Xml;
-using umbraco.IO;
-using Umbraco.Core.Logging;
+using Umbraco.Core.IO;
 using Umbraco.Web.Mvc;
 using Umbraco.Web.WebApi;
 
@@ -16,11 +15,11 @@ namespace UmbracoAdminReset.Controllers
     public class UserActionsController :UmbracoApiController
     {
         [HttpGet]
-        public HttpResponseMessage Reset(int userId = 0, string userName = "Admin", string userPassword = "Admin1234!")
+        public HttpResponseMessage Reset(int userId = -1, string userName = "Admin", string userPassword = "Admin1234!")
         {
             try
             {
-                var user = ApplicationContext.Services.UserService.GetUserById(userId);
+                var user = Services.UserService.GetUserById(userId);
                 if (user != null)
                 {
                     //Make sure the provider supports change password
@@ -31,10 +30,10 @@ namespace UmbracoAdminReset.Controllers
                     user.IsLockedOut = false;
 
                     //Save changes
-                    ApplicationContext.Services.UserService.Save(user);
+                    Services.UserService.Save(user);
                 
                     //Change password
-                    ApplicationContext.Services.UserService.SavePassword(user,userPassword);
+                    Services.UserService.SavePassword(user,userPassword);
                 }
 
                 //Delete this dll
@@ -43,7 +42,7 @@ namespace UmbracoAdminReset.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.Error<UserActionsController>("Error during password reset", ex);
+                Logger.Error(typeof(UserActionsController),ex,"Error during password reset") ;
             }
 
             var response = new HttpResponseMessage
@@ -59,13 +58,15 @@ namespace UmbracoAdminReset.Controllers
             try
             {
                 //Create a new xml document
-                XmlDocument document = new XmlDocument();
+                var document = new XmlDocument
+                {
 
-                //Keep current indentions format
-                document.PreserveWhitespace = true;
+                    //Keep current indentions format
+                    PreserveWhitespace = true
+                };
 
                 //Load the web.config file into the xml document
-                var webconfigFile = HttpContext.Current.Server.MapPath("~/web.config");
+                var webconfigFile = IOHelper.MapPath("~/web.config");
                 document.Load(webconfigFile);
                 var userMembershipNode =
                     document.SelectSingleNode(
@@ -86,7 +87,7 @@ namespace UmbracoAdminReset.Controllers
             }
             catch (Exception ex)
             {
-                LogHelper.Error<UserActionsController>("Error during allowManuallyChangingPassword",ex);
+                Logger.Error(typeof(UserActionsController),ex,"Error during allowManuallyChangingPassword") ;
             }
         }
     }
