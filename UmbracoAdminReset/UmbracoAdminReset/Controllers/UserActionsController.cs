@@ -2,15 +2,11 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Web;
 using System.Web.Http;
 using System.Web.Security;
 using System.Xml;
 using Umbraco.Core.IO;
-using Umbraco.Web;
-using Umbraco.Web.Composing;
 using Umbraco.Web.Mvc;
-using Umbraco.Web.Security;
 using Umbraco.Web.Security.Providers;
 using Umbraco.Web.WebApi;
 
