@@ -4,15 +4,20 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Web;
 using System.Web.Http;
+using System.Web.Security;
 using System.Xml;
 using Umbraco.Core.IO;
+using Umbraco.Web;
+using Umbraco.Web.Composing;
 using Umbraco.Web.Mvc;
+using Umbraco.Web.Security;
+using Umbraco.Web.Security.Providers;
 using Umbraco.Web.WebApi;
 
 namespace UmbracoAdminReset.Controllers
 {
     [PluginController("adminreset")]
-    public class UserActionsController :UmbracoApiController
+    public class UserActionsController : UmbracoApiController
     {
         [HttpGet]
         public HttpResponseMessage Reset(int userId = -1, string userName = "Admin", string userPassword = "Admin1234!")
@@ -31,18 +36,41 @@ namespace UmbracoAdminReset.Controllers
 
                     //Save changes
                     Services.UserService.Save(user);
-                
-                    //Change password
-                    Services.UserService.SavePassword(user,userPassword);
-                }
 
+                    //Change password
+                    UsersMembershipProvider membershipProvider = Membership.Providers["UsersMembershipProvider"] as UsersMembershipProvider;
+                    membershipProvider.ChangePassword(userName, null, userPassword);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(typeof(UserActionsController), ex, "Error during password reset");
+                
+                var errorResponse = new HttpResponseMessage
+                {
+                    Content = new StringContent("<html><body>Password could not be reset, see the logfile :-(</p></body></html>")
+                };
+                errorResponse.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+                return errorResponse;
+            }
+
+            try
+            {
                 //Delete this dll
                 var fileName = IOHelper.MapPath("~/bin/UmbracoAdminReset.dll");
                 File.Delete(fileName);
             }
             catch (Exception ex)
             {
-                Logger.Error(typeof(UserActionsController),ex,"Error during password reset") ;
+                Logger.Error(typeof(UserActionsController), ex, "Error during password reset");
+
+                var errorResponse = new HttpResponseMessage
+                {
+                    Content = new StringContent("<html><body><h1>Password is reset</h1><p>but the dll could not be removed from the /bin folder :-( </p></body></html>")
+                };
+                errorResponse.Content.Headers.ContentType = new MediaTypeHeaderValue("text/html");
+                return errorResponse;
             }
 
             var response = new HttpResponseMessage
@@ -87,7 +115,7 @@ namespace UmbracoAdminReset.Controllers
             }
             catch (Exception ex)
             {
-                Logger.Error(typeof(UserActionsController),ex,"Error during allowManuallyChangingPassword") ;
+                Logger.Error(typeof(UserActionsController), ex, "Error during allowManuallyChangingPassword");
             }
         }
     }
