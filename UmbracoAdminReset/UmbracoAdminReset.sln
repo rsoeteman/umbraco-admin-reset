@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoAdminReset", "UmbracoAdminReset\UmbracoAdminReset.csproj", "{4973FC05-0C95-4665-AC4E-8CEED3201FF8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UmbracoAdminReset", "UmbracoAdminReset\UmbracoAdminReset.csproj", "{CAC118AB-0F9D-42C3-99F9-DA201562E621}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,12 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4973FC05-0C95-4665-AC4E-8CEED3201FF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4973FC05-0C95-4665-AC4E-8CEED3201FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4973FC05-0C95-4665-AC4E-8CEED3201FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4973FC05-0C95-4665-AC4E-8CEED3201FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAC118AB-0F9D-42C3-99F9-DA201562E621}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAC118AB-0F9D-42C3-99F9-DA201562E621}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAC118AB-0F9D-42C3-99F9-DA201562E621}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAC118AB-0F9D-42C3-99F9-DA201562E621}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4E97C2DE-A0E5-45E7-86C6-89125C32CB97}
 	EndGlobalSection
 EndGlobal

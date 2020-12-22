@@ -34,6 +34,7 @@ namespace UmbracoAdminReset.Controllers
                     Services.UserService.Save(user);
 
                     //Change password
+
                     UsersMembershipProvider membershipProvider = Membership.Providers["UsersMembershipProvider"] as UsersMembershipProvider;
                     membershipProvider.ChangePassword(userName, null, userPassword);
 
